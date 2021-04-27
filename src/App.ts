@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 import morgan from "morgan";
+import TodoController from "./controllers/TodoController";
 
 class App {
   public app: Application;
@@ -23,12 +24,8 @@ class App {
   }
 
   protected routes(): void {
-    this.app.route("/").get((req: Request, res: Response) => {
-      return res.status(200).json({ message: "Hi there!" });
-    });
-    this.app.route("/").post((req: Request, res: Response) => {
-      return res.status(200).json({ message: "Hi there!" });
-    });
+    this.app.route("/").get(TodoController.index);
+    this.app.route("/").post(TodoController.create);
   }
 }
 
