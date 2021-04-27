@@ -50,16 +50,30 @@ class TodoController implements iController {
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<Response> => {
-    throw new APIError({ message: "Not implement yet" });
+  ): Promise<any> => {
+    try {
+      const { params, body } = req;
+      const objIndex = this.todos.findIndex((obj: any) => obj.id === params.id);
+      this.todos[objIndex] = { ...body };
+      return res.status(201).json(this.todos[objIndex]);
+    } catch (err) {
+      console.log(err);
+      next(err);
+    }
   };
 
   delete = async (
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<Response> => {
-    throw new APIError({ message: "Not implement yet" });
+  ): Promise<any> => {
+    try {
+      const { params } = req;
+      this.todos = this.todos.filter((obj: any) => obj.id !== params.id);
+      return res.status(201).send();
+    } catch (err) {
+      next(err);
+    }
   };
 }
 

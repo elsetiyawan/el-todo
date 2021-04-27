@@ -36,7 +36,6 @@ describe("Testing the todoController.create", () => {
     expect(response.deadline).toBe(newTodo.deadline);
     expect(response.done).toBe(newTodo.done);
   });
-
 });
 
 describe("Testing the todoController.index", () => {
@@ -64,5 +63,35 @@ describe("Testing the todoController.show", () => {
     expect(res.statusCode).toBe(200);
     expect(res._isEndCalled()).toBeTruthy();
     expect(res._getJSONData()).toStrictEqual(testData);
+  });
+});
+
+describe("Testing the todoController.update", () => {
+  it("the function should exist", () => {
+    expect(typeof TodoController.update).toBe("function");
+  });
+
+  it("should return the correct data with 200 status", () => {
+    req.params.id = testData.id;
+    delete testData["id"];
+    const updateData = { ...testData, done: true };
+    req.body = updateData;
+    TodoController.update(req, res, next);
+    expect(res.statusCode).toBe(201);
+    expect(res._isEndCalled()).toBeTruthy();
+    expect(res._getJSONData()).toMatchObject(updateData);
+  });
+});
+
+describe("Testing the todoController.delete", () => {
+  it("the function should exist", () => {
+    expect(typeof TodoController.delete).toBe("function");
+  });
+
+  it("should return the correct data with 200 status", () => {
+    req.params.id = testData.id;
+    TodoController.delete(req, res, next);
+    expect(res.statusCode).toBe(201);
+    expect(res._isEndCalled()).toBeTruthy();
   });
 });
