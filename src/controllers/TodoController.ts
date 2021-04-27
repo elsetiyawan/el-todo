@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import iController from "./ControllerInterface";
 import { v4 } from "uuid";
 import TodoService from "../services/TodoService";
+import APIError from "../helpers/APIError";
 
 class TodoController implements iController {
   public todos: any;
@@ -9,28 +10,56 @@ class TodoController implements iController {
     this.todos = [];
   }
 
-  index = async (req: Request, res: Response): Promise<Response> => {
+  index = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response> => {
     return res.status(200).json(this.todos);
   };
 
-  create = async (req: Request, res: Response): Promise<Response> => {
-    const tobePush = { ...req.body, id: v4() };
-    this.todos.push(tobePush);
-    return res.status(201).json(tobePush);
+  create = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> => {
+    try {
+      const tobePush = { ...req.body, id: v4() };
+      this.todos.push(tobePush);
+      return res.status(201).json(tobePush);
+    } catch (err) {
+      next(err);
+    }
   };
 
-  show = async (req: Request, res: Response): Promise<Response> => {
-    const { params } = req;
-    const dataToShow = this.todos.find((todo: any) => todo.id === params.id);
-    return res.status(200).json(dataToShow);
+  show = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> => {
+    try {
+      const { params } = req;
+      const dataToShow = this.todos.find((todo: any) => todo.id === params.id);
+      return res.status(200).json(dataToShow);
+    } catch (err) {
+      next(err);
+    }
   };
 
-  update = async (req: Request, res: Response): Promise<Response> => {
-    throw new Error("Not implement yet");
+  update = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response> => {
+    throw new APIError({ message: "Not implement yet" });
   };
 
-  delete = async (req: Request, res: Response): Promise<Response> => {
-    throw new Error("Not implement yet");
+  delete = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response> => {
+    throw new APIError({ message: "Not implement yet" });
   };
 }
 

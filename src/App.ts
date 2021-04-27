@@ -4,6 +4,8 @@ import helmet from "helmet";
 import compression from "compression";
 import morgan from "morgan";
 import TodoController from "./controllers/TodoController";
+import dotenv from "dotenv";
+import { ErrorHandler, NotFound } from "./middlewares/ErrorMiddleware";
 
 class App {
   public app: Application;
@@ -12,6 +14,8 @@ class App {
     this.app = express();
     this.plugins();
     this.routes();
+    this.errorHandling();
+    dotenv.config();
   }
 
   protected plugins(): void {
@@ -26,6 +30,11 @@ class App {
   protected routes(): void {
     this.app.route("/").get(TodoController.index);
     this.app.route("/").post(TodoController.create);
+  }
+
+  protected errorHandling(): void {
+    this.app.use(NotFound);
+    this.app.use(ErrorHandler);
   }
 }
 
