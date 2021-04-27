@@ -19,15 +19,6 @@ const Handler = (
   return res.status(404).json(response);
 };
 
-// exports.NotFound = (req: Request, res: Response, next: NextFunction) => {
-//   const err = new APIError({
-//     status: 404,
-//     message: "Page not found",
-//   });
-//   console.log(err);
-//   res.status(404).send("NOTFOUND");
-// };
-
 const NotFound = (req: Request, res: Response, next: NextFunction) => {
   const err = new APIError({ message: "Page not found", status: 404 });
   return Handler(err, req, res, next);
