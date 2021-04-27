@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "jest --watch-all",
+    "build": "tsc",
     "dev": "nodemon src/Server.ts"
   },
   "keywords": [
