@@ -26,7 +26,7 @@ describe("Testing the todoController.create", () => {
   });
 
   it("the function should return 201", () => {
-    TodoController.create(req, res);
+    TodoController.create(req, res, next);
     expect(res.statusCode).toBe(201);
     expect(res._isEndCalled()).toBeTruthy();
     testData = res._getJSONData();
@@ -36,6 +36,7 @@ describe("Testing the todoController.create", () => {
     expect(response.deadline).toBe(newTodo.deadline);
     expect(response.done).toBe(newTodo.done);
   });
+
 });
 
 describe("Testing the todoController.index", () => {
@@ -44,7 +45,7 @@ describe("Testing the todoController.index", () => {
   });
 
   it("the function should return 200 and list of data", () => {
-    TodoController.index(req, res);
+    TodoController.index(req, res, next);
     const responseData = res._getJSONData();
     expect(res.statusCode).toBe(200);
     expect(res._isEndCalled()).toBeTruthy();
@@ -59,7 +60,7 @@ describe("Testing the todoController.show", () => {
 
   it("should return the correct data with 200 status", () => {
     req.params.id = testData.id;
-    TodoController.show(req, res);
+    TodoController.show(req, res, next);
     expect(res.statusCode).toBe(200);
     expect(res._isEndCalled()).toBeTruthy();
     expect(res._getJSONData()).toStrictEqual(testData);
