@@ -1,4 +1,4 @@
-import TodoController from "../../controllers/TodoController";
+import TodoController from "../../src/controllers/TodoController";
 import httpMocks from "node-mocks-http";
 const newTodo = require("../mock/new-todo.json");
 const allTodo = require("../mock/list-todo.json");

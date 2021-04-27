@@ -1,5 +1,5 @@
 import request from "supertest";
-import App from "../../App";
+import App from "../../src/App";
 
 const newTodo = require("../mock/new-todo.json");
 const path: string = "/todos";
