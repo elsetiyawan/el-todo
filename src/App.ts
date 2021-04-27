@@ -6,6 +6,7 @@ import morgan from "morgan";
 import TodoController from "./controllers/TodoController";
 import dotenv from "dotenv";
 import { ErrorHandler, NotFound } from "./middlewares/ErrorMiddleware";
+import TodoRouter from "./routes/TodoRouter";
 
 class App {
   public app: Application;
@@ -28,8 +29,7 @@ class App {
   }
 
   protected routes(): void {
-    this.app.route("/").get(TodoController.index);
-    this.app.route("/").post(TodoController.create);
+    this.app.use("/todos", TodoRouter);
   }
 
   protected errorHandling(): void {
@@ -38,8 +38,5 @@ class App {
   }
 }
 
-const port: number = 8000;
-const app = new App().app;
-app.listen(port, () => {
-  console.log("Server is up and running on port ", port);
-});
+export default new App().app;
+
