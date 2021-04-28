@@ -3,7 +3,7 @@ import httpMocks from "node-mocks-http";
 const newTodo = require("../mock/new-todo.json");
 const allTodo = require("../mock/list-todo.json");
 
-let req: any, res: any, next: any, testData: any;
+let req: any, res: any, next: any, resData: any;
 
 beforeEach(() => {
   req = httpMocks.createRequest();
@@ -29,12 +29,13 @@ describe("Testing the todoController.create", () => {
     TodoController.create(req, res, next);
     expect(res.statusCode).toBe(201);
     expect(res._isEndCalled()).toBeTruthy();
-    testData = res._getJSONData();
-    const response = res._getJSONData();
-    expect(response.id).toBeTruthy();
-    expect(response.description).toBe(newTodo.description);
-    expect(response.deadline).toBe(newTodo.deadline);
-    expect(response.done).toBe(newTodo.done);
+    resData = res._getJSONData();
+    expect(resData).toMatchObject({
+      id: expect.any(String),
+      description: newTodo.description,
+      deadline: expect.any(String),
+      done: newTodo.done,
+    });
   });
 });
 
@@ -48,7 +49,12 @@ describe("Testing the todoController.index", () => {
     const responseData = res._getJSONData();
     expect(res.statusCode).toBe(200);
     expect(res._isEndCalled()).toBeTruthy();
-    expect(responseData[0]).toMatchObject(newTodo);
+    expect(responseData[0]).toMatchObject({
+      id: expect.any(String),
+      description: newTodo.description,
+      deadline: expect.any(String),
+      done: newTodo.done,
+    });
   });
 });
 
@@ -57,12 +63,12 @@ describe("Testing the todoController.show", () => {
     expect(typeof TodoController.show).toBe("function");
   });
 
-  it("should return the correct data with 200 status", () => {
-    req.params.id = testData.id;
-    TodoController.show(req, res, next);
+  it("should return the correct data with 200 status", async () => {
+    req.params.id = resData.id;
+    await TodoController.show(req, res, next);
     expect(res.statusCode).toBe(200);
     expect(res._isEndCalled()).toBeTruthy();
-    expect(res._getJSONData()).toStrictEqual(testData);
+    expect(res._getJSONData()).toStrictEqual(resData);
   });
 });
 
@@ -71,15 +77,19 @@ describe("Testing the todoController.update", () => {
     expect(typeof TodoController.update).toBe("function");
   });
 
-  it("should return the correct data with 200 status", () => {
-    req.params.id = testData.id;
-    delete testData["id"];
-    const updateData = { ...testData, done: true };
+  it("should return the correct data with 200 status", async () => {
+    req.params.id = resData.id;
+    const updateData = { ...resData, done: true };
     req.body = updateData;
-    TodoController.update(req, res, next);
+    await TodoController.update(req, res, next);
     expect(res.statusCode).toBe(201);
     expect(res._isEndCalled()).toBeTruthy();
-    expect(res._getJSONData()).toMatchObject(updateData);
+    expect(res._getJSONData()).toMatchObject({
+      id: resData.id,
+      description: updateData.description,
+      deadline: expect.any(String),
+      done: updateData.done,
+    });
   });
 });
 
@@ -88,9 +98,9 @@ describe("Testing the todoController.delete", () => {
     expect(typeof TodoController.delete).toBe("function");
   });
 
-  it("should return the correct data with 200 status", () => {
-    req.params.id = testData.id;
-    TodoController.delete(req, res, next);
+  it("should return the correct data with 200 status", async () => {
+    req.params.id = resData.id;
+    await TodoController.delete(req, res, next);
     expect(res.statusCode).toBe(201);
     expect(res._isEndCalled()).toBeTruthy();
   });

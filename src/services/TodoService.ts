@@ -1,5 +1,4 @@
-import { Request } from "express";
-import APIError from "helpers/APIError";
+import APIError from "../helpers/APIError";
 import { v4 } from "uuid";
 
 interface iTodo {
@@ -15,32 +14,61 @@ interface iRequestData {
   done: boolean;
 }
 
-let todos: iTodo[] = [];
-
 class TodoService {
+  todos: iTodo[];
+  constructor() {
+    this.todos = [];
+  }
   getAllTodo = (): iTodo[] => {
-    return todos;
+    return this.todos;
   };
 
-  create = (reqData: iRequestData): iTodo => {
+  createTodo = (reqData: iRequestData): iTodo => {
     const data = {
       ...reqData,
       id: v4(),
       deadline: new Date(reqData.deadline),
     };
 
-    todos.push(data);
+    this.todos.push(data);
     return data;
   };
 
-  getSingleTodoById = (id: string): void | iTodo => {
-    const singleTodo = todos.find((todo) => todo.id === id);
+  getSingleTodo = async (id: string): Promise<any | iTodo> => {
+    const singleTodo = this.todos.find((todo) => todo.id === id);
     if (!singleTodo) {
-      throw new APIError({ message: "todo not found" });
+      throw new APIError({ message: "todo not found", status: 404 });
     } else {
       return singleTodo;
     }
   };
+
+  updateSingleTodo = async (
+    id: string,
+    values: iRequestData
+  ): Promise<any | iTodo> => {
+    const targetTodo = this.todos.findIndex((todo) => todo.id === id);
+    if (targetTodo >= 0) {
+      this.todos[targetTodo] = {
+        ...values,
+        id: id,
+        deadline: new Date(values.deadline),
+      };
+      return this.todos[targetTodo];
+    } else {
+      throw new APIError({ message: "Todo not found", status: 404 });
+    }
+  };
+
+  deleteSingleTodo = async (id: string): Promise<any> => {
+    const targetTodo = this.todos.findIndex((todo) => todo.id === id);
+    if (targetTodo >= 0) {
+      this.todos = this.todos.filter((todo) => todo.id !== id);
+      return true;
+    } else {
+      throw new APIError({ message: "Todo not found", status: 404 });
+    }
+  };
 }
 
-export default TodoService;
+export default new TodoService();

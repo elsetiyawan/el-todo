@@ -9,7 +9,12 @@ describe("integration test", () => {
   it("should hit todo create / post", async () => {
     const response = await request(App).post(path).send(newTodo);
     expect(response.statusCode).toBe(201);
-    expect(response.body).toMatchObject(newTodo);
+    expect(response.body).toMatchObject({
+      id: expect.any(String),
+      deadline: expect.any(String),
+      description: newTodo.description,
+      done: newTodo.done,
+    });
     respData = response.body;
   });
 
@@ -36,6 +41,5 @@ describe("integration test", () => {
   it("should delete the data", async () => {
     const response = await request(App).delete(`${path}/${respData.id}`);
     expect(response.statusCode).toBe(201);
-    expect(response.body).toMatchObject({});
   });
 });

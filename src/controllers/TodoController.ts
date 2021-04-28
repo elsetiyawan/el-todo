@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import iController from "./ControllerInterface";
 import { v4 } from "uuid";
 import TodoService from "../services/TodoService";
-import APIError from "../helpers/APIError";
 
 class TodoController implements iController {
   public todos: any;
@@ -15,7 +14,8 @@ class TodoController implements iController {
     res: Response,
     next: NextFunction
   ): Promise<Response> => {
-    return res.status(200).json(this.todos);
+    const allTodos = TodoService.getAllTodo();
+    return res.status(200).json(allTodos);
   };
 
   create = async (
@@ -24,9 +24,10 @@ class TodoController implements iController {
     next: NextFunction
   ): Promise<any> => {
     try {
-      const tobePush = { ...req.body, id: v4() };
-      this.todos.push(tobePush);
-      return res.status(201).json(tobePush);
+      // const tobePush = { ...req.body, id: v4() };
+      // this.todos.push(tobePush);
+      const createTodo = TodoService.createTodo(req.body);
+      return res.status(201).json(createTodo);
     } catch (err) {
       next(err);
     }
@@ -39,8 +40,9 @@ class TodoController implements iController {
   ): Promise<any> => {
     try {
       const { params } = req;
-      const dataToShow = this.todos.find((todo: any) => todo.id === params.id);
-      return res.status(200).json(dataToShow);
+      // const dataToShow = this.todos.find((todo: any) => todo.id === params.id);
+      const readUser = await TodoService.getSingleTodo(params.id);
+      return res.status(200).json(readUser);
     } catch (err) {
       next(err);
     }
@@ -53,9 +55,10 @@ class TodoController implements iController {
   ): Promise<any> => {
     try {
       const { params, body } = req;
-      const objIndex = this.todos.findIndex((obj: any) => obj.id === params.id);
-      this.todos[objIndex] = { ...body };
-      return res.status(201).json(this.todos[objIndex]);
+      // const objIndex = this.todos.findIndex((obj: any) => obj.id === params.id);
+      // this.todos[objIndex] = { ...body };
+      const updateUser = await TodoService.updateSingleTodo(params.id, body);
+      return res.status(201).json(updateUser);
     } catch (err) {
       console.log(err);
       next(err);
@@ -69,8 +72,9 @@ class TodoController implements iController {
   ): Promise<any> => {
     try {
       const { params } = req;
-      this.todos = this.todos.filter((obj: any) => obj.id !== params.id);
-      return res.status(201).send();
+      // this.todos = this.todos.filter((obj: any) => obj.id !== params.id);
+      const deleteData = await TodoService.deleteSingleTodo(params.id);
+      return res.status(201).send(deleteData);
     } catch (err) {
       next(err);
     }
