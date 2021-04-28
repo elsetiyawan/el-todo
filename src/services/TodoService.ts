@@ -19,10 +19,13 @@ class TodoService {
   constructor() {
     this.todos = [];
   }
+
+  /** get all todo list */
   getAllTodo = (): iTodo[] => {
     return this.todos;
   };
 
+  /** create new todo task */
   createTodo = async (reqData: iRequestData): Promise<any | iTodo> => {
     const data = {
       ...reqData,
@@ -37,6 +40,7 @@ class TodoService {
     }
   };
 
+  /** get single todo */
   getSingleTodo = async (id: string): Promise<any | iTodo> => {
     const singleTodo = this.todos.find((todo) => todo.id === id);
     if (!singleTodo) {
@@ -46,6 +50,7 @@ class TodoService {
     }
   };
 
+  /** update single todo */
   updateSingleTodo = async (
     id: string,
     values: iRequestData
@@ -63,6 +68,7 @@ class TodoService {
     }
   };
 
+  /** delete single todo */
   deleteSingleTodo = async (id: string): Promise<any> => {
     const targetTodo = this.todos.findIndex((todo) => todo.id === id);
     if (targetTodo >= 0) {
