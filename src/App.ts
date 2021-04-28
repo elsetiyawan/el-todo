@@ -5,7 +5,11 @@ import compression from "compression";
 import morgan from "morgan";
 import TodoController from "./controllers/TodoController";
 import dotenv from "dotenv";
-import { ErrorHandler, NotFound } from "./middlewares/ErrorMiddleware";
+import {
+  ErrorHandler,
+  NotFound,
+  ConvertError,
+} from "./middlewares/ErrorMiddleware";
 import TodoRouter from "./routes/TodoRouter";
 
 class App {
@@ -33,10 +37,10 @@ class App {
   }
 
   protected errorHandling(): void {
+    this.app.use(ConvertError);
     this.app.use(NotFound);
     this.app.use(ErrorHandler);
   }
 }
 
 export default new App().app;
-
