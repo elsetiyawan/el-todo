@@ -26,7 +26,7 @@ class TodoController implements iController {
     try {
       // const tobePush = { ...req.body, id: v4() };
       // this.todos.push(tobePush);
-      const createTodo = TodoService.createTodo(req.body);
+      const createTodo = await TodoService.createTodo(req.body);
       return res.status(201).json(createTodo);
     } catch (err) {
       next(err);

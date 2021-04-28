@@ -23,15 +23,18 @@ class TodoService {
     return this.todos;
   };
 
-  createTodo = (reqData: iRequestData): iTodo => {
+  createTodo = async (reqData: iRequestData): Promise<any | iTodo> => {
     const data = {
       ...reqData,
       id: v4(),
       deadline: new Date(reqData.deadline),
     };
-
-    this.todos.push(data);
-    return data;
+    try {
+      this.todos.push(data);
+      return data;
+    } catch (err) {
+      throw new APIError({ message: "something wrong", status: 500 });
+    }
   };
 
   getSingleTodo = async (id: string): Promise<any | iTodo> => {
