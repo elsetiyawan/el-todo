@@ -31,12 +31,13 @@ class TodoService {
       ...reqData,
       id: v4(),
       deadline: new Date(reqData.deadline),
+      done: false,
     };
     try {
       this.todos.push(data);
       return data;
     } catch (err) {
-      throw new APIError({ message: "something wrong", status: 500 });
+      throw new APIError({ message: "Cannot create todo", status: 400 });
     }
   };
 
@@ -44,7 +45,7 @@ class TodoService {
   getSingleTodo = async (id: string): Promise<any | iTodo> => {
     const singleTodo = this.todos.find((todo) => todo.id === id);
     if (!singleTodo) {
-      throw new APIError({ message: "todo not found", status: 404 });
+      throw new APIError({ message: "Todo task not found", status: 400 });
     } else {
       return singleTodo;
     }
@@ -57,6 +58,12 @@ class TodoService {
   ): Promise<any | iTodo> => {
     const targetTodo = this.todos.findIndex((todo) => todo.id === id);
     if (targetTodo >= 0) {
+      if (
+        new Date(values.deadline) < new Date(this.todos[targetTodo].deadline)
+      ) {
+        throw new APIError({ message: "Date is invalid", status: 400 });
+      }
+
       this.todos[targetTodo] = {
         ...values,
         id: id,
@@ -64,7 +71,7 @@ class TodoService {
       };
       return this.todos[targetTodo];
     } else {
-      throw new APIError({ message: "Todo not found", status: 404 });
+      throw new APIError({ message: "Todo task not found", status: 500 });
     }
   };
 
@@ -75,7 +82,7 @@ class TodoService {
       this.todos = this.todos.filter((todo) => todo.id !== id);
       return true;
     } else {
-      throw new APIError({ message: "Todo not found", status: 404 });
+      throw new APIError({ message: "Todo task not found", status: 500 });
     }
   };
 }

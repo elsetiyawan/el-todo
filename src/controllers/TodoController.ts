@@ -55,7 +55,6 @@ class TodoController implements iController {
       const updateUser = await TodoService.updateSingleTodo(params.id, body);
       return res.status(201).json(updateUser);
     } catch (err) {
-      console.log(err);
       next(err);
     }
   };
