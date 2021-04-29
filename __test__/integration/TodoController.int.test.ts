@@ -73,9 +73,9 @@ describe("integration test", () => {
     const response = await request(App).put(`${path}/1`).send(updateData);
     expect(response.status).toBe(400);
     expect(response.body).toMatchObject({
-      code: 400,
-      message: expect.any(String),
-    });
+      code: 400, 
+      message: expect.any(String)
+    })
   });
 
   it("should update todo single read", async () => {

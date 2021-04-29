@@ -1,5 +1,6 @@
 import APIError from "../helpers/APIError";
 import { v4 } from "uuid";
+import { isDateValid } from "../helpers/helpers";
 
 interface iTodo {
   id: string;
@@ -58,10 +59,14 @@ class TodoService {
   ): Promise<any | iTodo> => {
     const targetTodo = this.todos.findIndex((todo) => todo.id === id);
     if (targetTodo >= 0) {
+      // check the date
       if (
-        new Date(values.deadline) < new Date(this.todos[targetTodo].deadline)
+        !isDateValid(
+          new Date(this.todos[targetTodo].deadline),
+          new Date(values.deadline)
+        )
       ) {
-        throw new APIError({ message: "Date is invalid", status: 400 });
+        throw new APIError({ message: "Date is not valid to be updated" });
       }
 
       this.todos[targetTodo] = {
