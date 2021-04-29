@@ -71,7 +71,7 @@ class TodoService {
       };
       return this.todos[targetTodo];
     } else {
-      throw new APIError({ message: "Todo task not found", status: 500 });
+      throw new APIError({ message: "Todo task not found", status: 400 });
     }
   };
 
@@ -82,7 +82,7 @@ class TodoService {
       this.todos = this.todos.filter((todo) => todo.id !== id);
       return true;
     } else {
-      throw new APIError({ message: "Todo task not found", status: 500 });
+      throw new APIError({ message: "Todo task not found", status: 400 });
     }
   };
 }
