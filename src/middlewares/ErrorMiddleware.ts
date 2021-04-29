@@ -11,8 +11,7 @@ const Handler = (err: any, req: Request, res: Response, next: NextFunction) => {
     errors: err.errors,
     stack: err.stack,
   };
-  // if (process.env.NODE_ENV === "production") delete response.stack;
-  delete response.stack;
+  if (process.env.NODE_ENV?.trim() === "production") delete response.stack;
   return res.status(err.status).json(response);
 };
 

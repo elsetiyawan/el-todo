@@ -4,9 +4,10 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "start": "SET NODE_ENV=production && node build/Server.js",
     "test": "jest --watch-all",
     "build": "tsc",
-    "dev": "nodemon src/Server.ts"
+    "dev": "SET NODE_ENV=development && nodemon src/Server.ts"
   },
   "keywords": [
     "express",
